@@ -20,13 +20,26 @@ async function getRandomPokemon() {
     };
 }
 
+app.get('/static/images/pokemon.png', async (req, res) => {
+    try {
+        const pokemon = await getRandomPokemon();
+        
+        const imageResponse = await axios.get(pokemon.image, { responseType: 'stream' });
+        res.setHeader('Content-Type', 'image/png');
+        imageResponse.data.pipe(res);
+    } catch (error) {
+        console.error("Failed to fetch Pokémon image:", error);
+        res.status(500).send('Failed to fetch Pokémon image');
+    }
+});
+
 app.use(async (req, res, next) => {
     try {
         const pokemon = await getRandomPokemon();
         
         const requestHeaders = req.headers;
         const requestTime = new Date().toLocaleString();
-        const clientIp = req.ip;
+        const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
         const requestMethod = req.method;
         const requestUri = req.originalUrl;
         const serverName = os.hostname();
@@ -46,7 +59,8 @@ app.use(async (req, res, next) => {
                     <div class="container mx-auto">
                         <h1 class="text-4xl font-bold mt-10 text-slate-600">Random Pokémon: ${pokemon.name}</h1>
                         <div class="border border-2 border-slate-900/30 p-4 mx-auto w-max h-max mt-5">
-                            <img src="${pokemon.image}" alt="${pokemon.name}">
+                            <!-- Use the static image path for the Pokémon image -->
+                            <img src="/static/images/pokemon.png" alt="${pokemon.name}">
                         </div>
                         <p class="mt-5 text-lg"><strong>Abilities:</strong> ${pokemon.abilities}</p>
                         <a href="/" class="text-blue-500 hover:text-blue-700 mt-5 inline-block text-lg">Get Another Pokémon</a>
@@ -66,7 +80,7 @@ app.use(async (req, res, next) => {
                                 <th class="px-4 py-2 border border-slate-300">Value</th>
                             </tr>
                             ${Object.entries(requestHeaders).map(([key, value]) => {
-                                return `<tr><td class="px-4 py-2 border border-slate-300">${key}</td><td class="px-4 py-2 border border-slate-300">${value}</td></tr>`;
+                                return `<tr><td class="px-4 py-2 border border-slate-300 min-w-64">${key}</td><td class="px-4 py-2 border border-slate-300 text-wrap">${value}</td></tr>`;
                             }).join('')}
                         </table>
 
@@ -74,7 +88,7 @@ app.use(async (req, res, next) => {
                         <p><strong>Response Status Code:</strong> ${responseStatus}</p>
 
                         <h3 class="mt-10 text-xl font-medium">Response Headers:</h3>
-                        <table class="mt-5 table-auto w-full border-collapse border border-slate-300">
+                        <table class="mt-5 table-auto w-full border-collapse border border-slate-300 mb-8">
                             <tr class="bg-slate-200">
                                 <th class="px-4 py-2 border border-slate-300">Header</th>
                                 <th class="px-4 py-2 border border-slate-300">Value</th>
