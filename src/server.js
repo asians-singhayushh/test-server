@@ -33,6 +33,14 @@ app.get('/static/images/pokemon.png', async (req, res) => {
     }
 });
 
+app.get('/redirect', (req, res) => {
+    res.redirect(302, '/redirected-url');
+});
+
+app.get('/redirect-304', (req, res) => {
+    res.redirect(304, '/redirected-url');
+});
+
 app.use(async (req, res, next) => {
     try {
         const pokemon = await getRandomPokemon();
