@@ -7,13 +7,13 @@ const app = express();
 const port = 3000;
 
 app.use(express.static(path.join(__dirname, '../public')));
-# app.use(express.static(path.join(__dirname, '../public'), {
-#    setHeaders: (res, path) => {
-#        if (path.endsWith('.css') || path.endsWith('.js')) {
-#            res.setHeader('Cache-Control', 'public, max-age=43200'); 
-#        }
-#    }
-# }));
+// app.use(express.static(path.join(__dirname, '../public'), {
+//    setHeaders: (res, path) => {
+//        if (path.endsWith('.css') || path.endsWith('.js')) {
+//            res.setHeader('Cache-Control', 'public, max-age=43200'); 
+//        }
+//    }
+// }));
 
 async function getRandomPokemon() {
     const randomId = Math.floor(Math.random() * 898) + 1;
