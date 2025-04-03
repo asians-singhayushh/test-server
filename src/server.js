@@ -2,6 +2,9 @@ const express = require('express');
 const axios = require('axios');
 const path = require('path');
 const os = require('os');
+const {
+  randomBytes,
+} = require('node:crypto');
 
 const app = express();
 const port = 3000;
@@ -41,7 +44,7 @@ app.get('/static/images/pokemon.png', async (req, res) => {
 });
 
 app.get('/redirect', (req, res) => {
-    res.redirect(302, '/redirected-url');
+    res.redirect(302, randomBytes(3).toString("hex"));
 });
 
 app.get('/redirect-304', (req, res) => {
