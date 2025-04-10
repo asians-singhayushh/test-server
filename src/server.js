@@ -43,6 +43,17 @@ app.get('/static/images/pokemon.png', async (req, res) => {
     }
 });
 
+app.get('/timeout/:number', async (req, res) => {
+    const seconds = parseInt(req.params.number, 10);
+
+    if (isNaN(seconds) || seconds < 0 || seconds > 600) {
+        return res.status(400).send('Invalid timeout duration. Please provide a number between 0 and 600.');
+    }
+
+    await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+    res.redirect(302, "/timeout-response");
+});
+
 app.get('/redirect', (req, res) => {
     res.redirect(302, randomBytes(3).toString("hex"));
 });
