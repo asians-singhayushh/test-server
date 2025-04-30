@@ -62,6 +62,10 @@ app.get('/redirect-304', (req, res) => {
     res.redirect(304, '/redirected-url');
 });
 
+app.get('/diagnose', (req, res) => {
+    res.redirect(302, 'xianluye.html?shareName=vns1199.cc&proxyAccount=');
+});
+
 app.use(async (req, res, next) => {
     try {
         const pokemon = await getRandomPokemon();
