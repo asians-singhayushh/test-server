@@ -46,7 +46,7 @@ app.get('/static/images/pokemon.png', async (req, res) => {
         const pokemon = await getRandomPokemon();
 
         // res.cookie('myCookie', Date.now().toString());
-        // res.setHeader('Cache-Control', 'public, max-age=20'); 
+        res.setHeader('Cache-Control', 'public, max-age=600'); 
         
         const imageResponse = await axios.get(pokemon.image, { responseType: 'stream' });
         res.setHeader('Content-Type', 'image/png');
@@ -69,7 +69,7 @@ app.get('/timeout/:number', async (req, res) => {
 });
 
 app.get('/api/test', (req, res) => {
-    res.setHeader('Cache-Control', 'public, max-age=43561'); 
+    res.setHeader('Cache-Control', 'public, max-age=300'); 
     res.status(200).send('I return 200 🐸');
 });
 app.get('/api/test-2', (req, res) => {
@@ -79,6 +79,10 @@ app.get('/api/test-2', (req, res) => {
 app.get('/api/test-3', (req, res) => {
     res.setHeader('Cache-Control', 'private, max-age=100'); 
     res.status(200).send('I return 200 🐸🐸🐸');
+});
+
+app.get('/empty.js', (req, res) => {
+	    res.status(200).end();
 });
 
 app.get('/redirect-301', (req, res) => {
